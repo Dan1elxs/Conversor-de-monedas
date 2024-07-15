@@ -10,20 +10,30 @@ public class Main {
             Scanner scanner = new Scanner(System.in);
 
             System.out.println("Bienvenido al Conversor de Monedas");
-            System.out.println("Tasas de cambio disponibles:");
-            System.out.println(converter.getExchangeRates());
 
-            System.out.println("Ingrese el monto a convertir:");
-            double amount = scanner.nextDouble();
+            boolean continuar = true;
+            while (continuar) {
+                System.out.println("\nTasas de cambio disponibles:");
+                System.out.println(converter.getExchangeRates());
 
-            System.out.println("Ingrese la moneda de origen (ej. USD):");
-            String fromCurrency = scanner.next();
+                System.out.println("\nIngrese el monto a convertir (o 0 para salir):");
+                double amount = scanner.nextDouble();
+                if (amount == 0) {
+                    continuar = false;
+                    break;
+                }
 
-            System.out.println("Ingrese la moneda de destino (ej. EUR):");
-            String toCurrency = scanner.next();
+                System.out.println("Ingrese la moneda de origen (ej. USD):");
+                String fromCurrency = scanner.next();
 
-            double convertedAmount = converter.convertCurrency(amount, fromCurrency, toCurrency);
-            System.out.printf("%.2f %s = %.2f %s\n", amount, fromCurrency, convertedAmount, toCurrency);
+                System.out.println("Ingrese la moneda de destino (ej. EUR):");
+                String toCurrency = scanner.next();
+
+                double convertedAmount = converter.convertCurrency(amount, fromCurrency, toCurrency);
+                System.out.printf("%.2f %s = %.2f %s\n", amount, fromCurrency, convertedAmount, toCurrency);
+            }
+
+            System.out.println("Saliendo del programa...");
 
             scanner.close();
         } catch (IOException e) {
