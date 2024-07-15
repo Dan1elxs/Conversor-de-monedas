@@ -6,25 +6,29 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class ExchangeRateApiClient {
-    private static final String API_URL = "https://v6.exchangerate-api.com/v6/397728e928139f2fb8209222/latest/USD";
+    private static final String BASE_URL = "https://v6.exchangerate-api.com/v6/${EXCH_APK}/latest/USD";
 
     public static String getExchangeRatesJson() throws IOException {
-        // Establece la URL de la API de tasas de cambio
-        URL url = new URL(API_URL);
+        // Obtener la API key desde la variable de entorno
+        String apiKey = System.getenv("EXCH_APK");
+        String apiUrl = BASE_URL.replace("${EXCH_APK}", apiKey);
 
-        // Abre una conexión HTTP con la URL
+        // Establecer la URL de la API de tasas de cambio
+        URL url = new URL(apiUrl);
+
+        // Abrir una conexión HTTP con la URL
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET"); // Configura el método de solicitud como GET
+        conn.setRequestMethod("GET"); // Configurar el método de solicitud como GET
 
-        int responseCode = conn.getResponseCode(); // Obtiene el código de respuesta HTTP
+        int responseCode = conn.getResponseCode(); // Obtener el código de respuesta HTTP
         if (responseCode == HttpURLConnection.HTTP_OK) { // Si la respuesta es exitosa (código 200)
-            Scanner scanner = new Scanner(conn.getInputStream()); // Lee la respuesta desde el flujo de entrada
+            Scanner scanner = new Scanner(conn.getInputStream()); // Leer la respuesta desde el flujo de entrada
             StringBuilder response = new StringBuilder();
             while (scanner.hasNextLine()) {
-                response.append(scanner.nextLine()); // Lee cada línea de la respuesta y la concatena
+                response.append(scanner.nextLine()); // Leer cada línea de la respuesta y concatenarla
             }
-            scanner.close(); // Cierra el scanner
-            return response.toString(); // Devuelve la respuesta como una cadena JSON
+            scanner.close(); // Cerrar el scanner
+            return response.toString(); // Devolver la respuesta como una cadena JSON
         } else {
             throw new IOException("Error al obtener tasas de cambio. Código de respuesta: " + responseCode);
         }
